@@ -1,0 +1,12 @@
+ID,Type,Name,Parent,Contest ID,Attendees
+1,Contest,Finals,null,null
+1,Site,Northern hemisphere,1,50
+2,Site,Southern hemisphere,1,50
+2,Contest,Southern hemisphere Regional,1,null
+3,Contest,Northern hemisphere Regional,1,null
+3,Site,American Dallas,2,60
+4,Site,Eurasian Kiev,2,100
+5,Site,Australian Perth	3,20
+6,Site,Brazilian Rio,3,80
+4,Contest,Local Texan Feast,2,null
+7,Site,Wacoan,4,30
