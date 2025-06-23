@@ -22,16 +22,13 @@ public class TreeApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Contest/Site Tree - Adapter Pattern Demo");
+        primaryStage.setTitle("Tree Representation of Data");
 
-        // Create layout
         BorderPane layout = new BorderPane();
 
-        // Top: simple toolbar
         HBox toolbar = createToolbar();
         layout.setTop(toolbar);
 
-        // Center: split pane with tree and details
         SplitPane centerPane = createCenterPane();
         layout.setCenter(centerPane);
 
@@ -39,30 +36,26 @@ public class TreeApplication extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // Load sample data
-        loadSampleData();
+        loadData();
     }
 
     private HBox createToolbar() {
         HBox toolbar = new HBox(10);
         toolbar.setStyle("-fx-padding: 10; -fx-background-color: #f0f0f0;");
 
-        Button openButton = new Button("Open CSV");
         Button expandButton = new Button("Expand All");
         Button collapseButton = new Button("Collapse All");
 
-        openButton.setOnAction(e -> openCSVFile());
         expandButton.setOnAction(e -> expandAll(treeView.getRoot()));
         collapseButton.setOnAction(e -> collapseAll(treeView.getRoot()));
 
-        toolbar.getChildren().addAll(openButton, expandButton, collapseButton);
+        toolbar.getChildren().addAll(expandButton, collapseButton);
         return toolbar;
     }
 
     private SplitPane createCenterPane() {
         SplitPane splitPane = new SplitPane();
 
-        // Left: Tree view
         VBox treePanel = new VBox(5);
         treePanel.setStyle("-fx-padding: 10;");
 
@@ -73,7 +66,6 @@ public class TreeApplication extends Application {
         treeView.setCellFactory(tv -> new TreeCellAdapter());
         treeView.setShowRoot(false);
 
-        // Selection listener
         treeView.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> {
                     if (newVal != null) {
@@ -85,7 +77,6 @@ public class TreeApplication extends Application {
         treePanel.getChildren().addAll(treeLabel, treeView);
         VBox.setVgrow(treeView, Priority.ALWAYS);
 
-        // Right: Details
         VBox detailsPanel = new VBox(5);
         detailsPanel.setStyle("-fx-padding: 10;");
 
@@ -105,10 +96,6 @@ public class TreeApplication extends Application {
         return splitPane;
     }
 
-    /**
-     * TreeCell Adapter - demonstrates Adapter Pattern
-     * Adapts your IDDefinedEntity objects for display in JavaFX TreeView
-     */
     private static class TreeCellAdapter extends TreeCell<IDDefinedEntity> {
         @Override
         protected void updateItem(IDDefinedEntity entity, boolean empty) {
@@ -118,11 +105,9 @@ public class TreeApplication extends Application {
                 setText(null);
                 setStyle("");
             } else {
-                // Adapt your entity for display using instanceof
                 String icon = entity instanceof Contest ? "🏆" : "📍";
                 setText(icon + " " + entity.getName() + " (ID: " + entity.getId() + ")");
 
-                // Style based on type using instanceof
                 if (entity instanceof Contest) {
                     setStyle("-fx-text-fill: #2E8B57; -fx-font-weight: bold;");
                 } else {
@@ -132,25 +117,20 @@ public class TreeApplication extends Application {
         }
     }
 
-    /**
-     * TreeItem Adapter for your entities - demonstrates Adapter Pattern
-     * Adapts your IDDefinedEntity hierarchy to JavaFX TreeItem structure
-     */
     private static class TreeItemAdapter extends TreeItem<IDDefinedEntity> {
         public TreeItemAdapter(IDDefinedEntity entity) {
             super(entity);
 
-            // Add children from your entity's children list
             for (IDDefinedEntity child : entity.children) {
                 getChildren().add(new TreeItemAdapter(child));
             }
         }
     }
 
-    private void populateTreeView(List<IDDefinedEntity> roots) {
+    private void populateTreeView(List<IDDefinedEntity> tree) {
         TreeItem<IDDefinedEntity> root = new TreeItem<>();
 
-        for (IDDefinedEntity entity : roots) {
+        for (IDDefinedEntity entity : tree) {
             TreeItemAdapter item = new TreeItemAdapter(entity);
             item.setExpanded(true);
             root.getChildren().add(item);
@@ -158,7 +138,7 @@ public class TreeApplication extends Application {
 
         root.setExpanded(true);
         treeView.setRoot(root);
-        this.currentRoots = roots;
+        this.currentRoots = tree;
     }
 
     private void openCSVFile() {
@@ -176,17 +156,12 @@ public class TreeApplication extends Application {
 
     private void loadDataFromFile(String filePath) {
         try {
-            // Use your Director to import from CSV (Builder pattern)
+
             List<IDDefinedEntity> entities = Director.importFromCSV(filePath);
 
-            // Build tree structure
-            List<IDDefinedEntity> roots = TreeBuilder.buildTree(entities);
+            List<IDDefinedEntity> tree = TreeBuilder.buildTree(entities);
 
-            // Print to console (requirement)
-            TreeBuilder.printTree(roots);
-
-            // Show in GUI
-            populateTreeView(roots);
+            populateTreeView(tree);
 
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -196,34 +171,28 @@ public class TreeApplication extends Application {
         }
     }
 
-    private void loadSampleData() {
-        // Try to load sample data from CSV file using your Director
+    private void loadData() {
         String csvPath = "src/main/resources/contest_data.csv";
 
-        // Try to load from resources first (for packaged application)
         try {
             var resource = getClass().getResourceAsStream("/contest_data.csv");
             if (resource != null) {
-                // Create temporary file from resource
                 java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("contest_data", ".csv");
                 java.nio.file.Files.copy(resource, tempFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 csvPath = tempFile.toString();
             }
         } catch (Exception e) {
-            // Fall back to file system path
             System.out.println("Loading from file system: " + csvPath);
         }
 
-        // Check if file exists before trying to load
         if (new File(csvPath).exists()) {
             loadDataFromFile(csvPath);
         } else {
             System.out.println("Sample CSV file not found at: " + csvPath);
-            System.out.println("Use 'Open CSV' button to load your data file.");
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Welcome");
-            alert.setContentText("Sample data file not found. Click 'Open CSV' to load your contest_data.csv file.");
+            alert.setContentText("Data file not found.");
             alert.showAndWait();
         }
     }
