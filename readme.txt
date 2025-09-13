@@ -1,6 +1,6 @@
 PluggableAdapter
 
-There are two implementations, per the instructions. The primary implementation is run from the TreeApplication class. The secondary implementation is contained within the hybrid package and is run from the Facade class. This is the Facade implementation of the same program.
+There are two implementations. The primary implementation is run from the TreeApplication class. The secondary implementation is contained within the hybrid package and is run from the Facade class. This is the Facade implementation of the same program.
 
 IMPORTANT
 
