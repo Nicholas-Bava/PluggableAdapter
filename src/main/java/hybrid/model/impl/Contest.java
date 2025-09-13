@@ -1,6 +1,6 @@
-package model.impl;
+package hybrid.model.impl;
 
-import model.IDDefinedEntity;
+import hybrid.model.IDDefinedEntity;
 
 public class Contest extends IDDefinedEntity {
 

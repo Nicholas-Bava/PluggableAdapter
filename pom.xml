@@ -14,7 +14,23 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>21.0.1</javafx.version>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
+        <main.class>TreeApplication</main.class>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>original</id>
+            <properties>
+                <main.class>TreeApplication</main.class>
+            </properties>
+        </profile>
+        <profile>
+            <id>hybrid</id>
+            <properties>
+                <main.class>hybrid.Facade</main.class>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -43,7 +59,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>TreeApplication</mainClass>
+                    <mainClass>${main.class}</mainClass>
                 </configuration>
             </plugin>
 
@@ -51,9 +67,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
-                <configuration>
-                    <mainClass>com.adapter.TreeApplication</mainClass>
-                </configuration>
             </plugin>
 
             <plugin>

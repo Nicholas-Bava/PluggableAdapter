@@ -1,14 +1,10 @@
-package model.builder;
+package hybrid.model.builder;
 
-import model.IDDefinedEntity;
-import model.builder.ContestBuilder;
-import model.builder.SiteBuilder;
-import org.apache.commons.csv.CSVFormat;
+import hybrid.model.IDDefinedEntity;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;

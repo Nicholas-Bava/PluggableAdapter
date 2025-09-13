@@ -1,3 +1,9 @@
+package hybrid;
+
+import hybrid.model.IDDefinedEntity;
+import hybrid.model.builder.Director;
+import hybrid.model.impl.Contest;
+import hybrid.tree.TreeBuilder;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -7,10 +13,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model.IDDefinedEntity;
-import model.builder.Director;
-import model.impl.Contest;
-import tree.TreeBuilder;
 
 import java.io.File;
 import java.util.List;
@@ -22,10 +24,24 @@ public class TreeApplication extends Application {
     private TextArea detailsArea;
     private List<IDDefinedEntity> currentRoots;
 
+    private static List<IDDefinedEntity> preParsedData;
+
+    public static void setParsedData(List<IDDefinedEntity> tree) {
+        preParsedData = tree;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         setUpUI(primaryStage);
-        loadData();
+        // If calling from Facade which has already passed in parsed data, do not call loadData, otherwise loadData
+        // is called
+        if (preParsedData != null) {
+            System.out.println(" TreeApplication: Using preprocessed data from Facade");
+            populateTreeView(preParsedData);
+        } else {
+            System.out.println(" TreeApplication: No preprocessed data, loading from file...");
+            loadData();
+        }
     }
 
     public void setUpUI(Stage primaryStage) {

@@ -1,7 +1,7 @@
-package tree;
+package hybrid.tree;
 
-import model.IDDefinedEntity;
-import model.impl.Contest;
+import hybrid.model.IDDefinedEntity;
+import hybrid.model.impl.Contest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
